@@ -5,6 +5,7 @@ import os
 from gdapi import *  # NOQA
 
 DEFAULT_TIMEOUT = 45
+SLEEP_TIME = float(os.getenv('CATTLE_WAIT_SLEEP_TIME', '0.5'))
 
 
 class Client(gdapi.Client):
@@ -21,7 +22,7 @@ class Client(gdapi.Client):
         start = time.time()
         obj = self.reload(obj)
         while obj.transitioning == 'yes':
-            time.sleep(.5)
+            time.sleep(SLEEP_TIME)
             obj = self.reload(obj)
             if time.time() - start > timeout:
                 msg = 'Timeout waiting for [{0}] to be done'.format(obj)
